@@ -279,21 +279,15 @@ export function editOption(
 export function duplicateQuestionInArray(
     questions: Question[],
     targetId: number,
-    newId: number,
+    newId: number
 ): Question[] {
-    const ret: Question[] = [];
-
-    questions.forEach((q: Question) => {
-        ret.push({ ...q, options: [...q.options] });
-        if (targetId === q.id) {
-            ret.push({
-                ...q,
-                options: [...q.options],
-                id: newId,
-                name: `Copy of ${q.name}`,
-            });
-        }
-    });
-
-    return ret;
+    return questions.flatMap((q: Question) =>
+        q.id === targetId
+            ? [
+                  { ...q, options: [...q.options] },
+                  { ...q, options: [...q.options], id: newId, name: `Copy of ${q.name}` }
+              ]
+            : [{ ...q, options: [...q.options] }]
+    );
 }
+
